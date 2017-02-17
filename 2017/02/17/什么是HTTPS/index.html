@@ -1,0 +1,253 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>什么是HTTPS | yaoyj</title>
+  <meta name="author" content="yaoyj">
+  
+  <meta name="description" content="我们都知道，HTTP（超文本传输协议）是一种建立在 TCP/IP 协议之上的通信协议，用于 web 客户端和服务器之间进行通信。而 HTTP 本身是明文传输的，没有经过任何安全处理，这样没有加密的通信会有一定的风险，比如：
+1. 通信使用明文（不加密），内容可能被窃听
+2. 不验证通信方的身份，可能遭遇伪装
+3. 无法证明报文的完整性，内容可能已遭篡改
+为了解决以上问题，网景在1994年创建了HTTPS（安全超文本传输协议），并应用在网景导航者浏览器中。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="什么是HTTPS"/>
+  <meta property="og:site_name" content="yaoyj"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="yaoyj" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script src="/js/jquery.min.js"></script>
+
+  
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-45019001-1', 'topdna.org');
+  ga('send', 'pageview');
+</script>
+
+
+</head>
+
+
+<body>
+  <!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0027_Simplified Chinese.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">yaoyj</a></h1>
+  <h2><a href="/">个人成长记</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">首页</a></li>
+    
+      <li><a href="/categories/tech/">技术</a></li>
+    
+      <li><a href="/categories/life/">生活</a></li>
+    
+      <li><a href="/categories/thoughts/">随感</a></li>
+    
+      <li><a href="/archives">归档</a></li>
+    
+      <li><a href="/about">关于</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="default">
+  
+  <div class="post-content">
+    <header>
+      
+        <time datetime="2017-02-17T07:22:41.000Z"><a href="/2017/02/17/什么是HTTPS/">2017-02-17</a></time>
+      
+      
+  
+    <h1 class="title">什么是HTTPS</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>我们都知道，HTTP（超文本传输协议）是一种建立在 TCP/IP 协议之上的通信协议，用于 web 客户端和服务器之间进行通信。而 HTTP 本身是明文传输的，没有经过任何安全处理，这样没有加密的通信会有一定的风险，比如：</p>
+<pre><code>1. 通信使用明文（不加密），内容可能被窃听
+2. 不验证通信方的身份，可能遭遇伪装
+3. 无法证明报文的完整性，内容可能已遭篡改
+</code></pre><p>为了解决以上问题，网景在1994年创建了HTTPS（安全超文本传输协议），并应用在网景导航者浏览器中。<br><a id="more"></a><br><img src="/images/http_https.jpeg"></p>
+<p>如上图，HTTPS = HTTP + SSL/TLS<br>SSL 是 TLS 的早期版本，以下统一称为SSL。SSL（安全传输层协议）是介于 TCP 和 HTTP 之间的一层安全协议，不影响原有的 TCP 协议和 HTTP 协议，所以使用 HTTPS 基本上不需要对 HTTP 页面进行太多的改造.简单来说，HTTPS 就是安全版的 HTTP。那么，HTTPS 的工作机制是怎样的呢？在介绍 HTTPS 的工作机制之前先了解几个概念：</p>
+<h4 id="一、-密钥"><a href="#一、-密钥" class="headerlink" title="一、 密钥"></a>一、 密钥</h4><pre><code>密钥是一种参数，它是将明文转换为密文或将密文转换为明文的算法中输入的参数。简单来说，就是用来加密数据或者解密数据的key。顾名思义，公钥就是公开的密钥，私钥就是私有的密钥。
+</code></pre><h4 id="二、对称密钥加密"><a href="#二、对称密钥加密" class="headerlink" title="二、对称密钥加密"></a>二、对称密钥加密</h4><pre><code>对称密钥加密，就是加密和解密同用一个密钥，这种加密方法，加/解密速度快，适合于对大数据量进行加密，但是必须要把密钥传给对方，而在互联网上传递密钥的时候很容易被监听。
+</code></pre><h4 id="三、公开密钥加密"><a href="#三、公开密钥加密" class="headerlink" title="三、公开密钥加密"></a>三、公开密钥加密</h4><pre><code>公开密钥加密，加密和解密使用不同的密钥。其中一把是私有密钥（不能让任何其他人知道），一把是公开密钥（可以随意发布）。发文方使用公开密钥加密，收文方使用私有密钥解密。但是公开密钥加密依然有问题，我们不能确认收到的公开密钥就是原本预想的那台服务器发行的公开密钥，也许在公开密钥的传输过程中就已经被替换掉了。为了解决这一问题，就用到下面的数字证书了。
+</code></pre><h4 id="四、数字证书"><a href="#四、数字证书" class="headerlink" title="四、数字证书"></a>四、数字证书</h4><pre><code>数字证书（CA证书）是由数字认证机构或其他相关机关颁发的公开密钥证书，只要证书是可信的，公钥就是可信的。
+</code></pre><img src="/images/ca.jpeg">
+<p>一个使用了 HTTPS 的网站访问过程如下：</p>
+<pre><code>1. 浏览器发送一个连接请求给服务器;服务器将自己的证书(包含服务器公钥)、对称加密算法种类及其他相关信息返回客户端；
+2. 客户端浏览器检查服务器传送到 CA 证书是否由自己信赖的 CA 中心签发。若是，执行 4 步;否则，给客户一个警告信息：询问是否继续访问；
+3. 客户端浏览器比较证书里的信息，如证书有效期、服务器域名和公钥，与服务器传回的信息是否一致，如果一致，则浏览器完成对服务器的身份认证；
+4. 服务器要求客户端发送客户端证书(包含客户端公钥)、支持的对称加密方案及其他相关信息。收到后，服务器进行相同的身份认证，若没有通过验证，则拒绝连接；
+5. 服务器根据客户端浏览器发送到密码种类，选择一种加密程度最高的方案，用客户端公钥加密后通知到浏览器；
+6. 客户端通过私钥解密后，得知服务器选择的加密方案，并选择一个通话密钥，接着用服务器公钥加密后发送给服务器；
+7. 服务器接收到的浏览器传送到消息，用私钥解密，获得通话密钥；
+8. 接下来的数据传输都使用该对称密钥进行加密。
+</code></pre><h4 id="HTTPS-和-HTTP-的区别"><a href="#HTTPS-和-HTTP-的区别" class="headerlink" title="HTTPS 和 HTTP 的区别"></a>HTTPS 和 HTTP 的区别</h4><p>介绍了 HTTPS 的工作机制之后，这里总结一下 HTTPS 和 HTTP 的区别：</p>
+<pre><code>- HTTPS 协议需要到 CA 申请证书，一般免费证书很少，需要交费；
+- HTTP 协议运行在 TCP 之上，所有传输的内容都是明文；而 HTTPS 运行在 SSL 之上，SSL 运行在 TCP 之上，所有传输的内容都经过加密的；
+- HTTP 和 HTTPS 使用的是完全不同的连接方式，用的端口也不一样，前者是80，后者是443；
+- HTTPS 可以有效的防止运营商劫持，解决了防劫持的一个大问题。
+由于当今时代对安全性要求更高，Chrome 和 Firefox 都大力支持网站使用 HTTPS，苹果也在 ios 10 系统中强制 app 使用 HTTPS 来传输数据，由此可见 HTTPS 势在必行。
+</code></pre><h4 id="参考文档："><a href="#参考文档：" class="headerlink" title="参考文档："></a>参考文档：</h4><ol>
+<li><a href="http://www.ruanyifeng.com/blog/2014/02/ssl_tls.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2014/02/ssl_tls.html</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2014/09/illustration-ssl.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2014/09/illustration-ssl.html</a></li>
+<li><a href="http://op.baidu.com/2015/04/https-s01a01/" target="_blank" rel="external">http://op.baidu.com/2015/04/https-s01a01/</a></li>
+<li><a href="http://www.alloyteam.com/2016/07/httphttp2-0spdyhttps-reading-this-is-enough/" target="_blank" rel="external">http://www.alloyteam.com/2016/07/httphttp2-0spdyhttps-reading-this-is-enough/</a></li>
+<li>《HTTP 权威指南》</li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+
+        
+          <div class="alignleft post-nav">
+            <em>上一篇: </em><a href="/2017/02/17/drag-and-drop/">drag-and-drop</a>
+          </div>
+        
+        
+          <div class="alignright post-nav">
+            <em>下一篇: </em><a href="/2017/02/17/debounce-and-throttle/">debounce-and-throttle</a>
+          </div>
+          <div class="clearfix"></div>
+        
+
+        
+        
+  
+  <div class="categories">
+    <a href="/categories/tech/">技术</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/HTTP-HTTPS/">HTTP/HTTPS</a>
+  </div>
+
+        
+  <div class="addthis addthis_toolbox addthis_default_style">
+    
+    
+    
+      <a class="addthis_button_sinaweibo_like"></a>
+    
+    
+      <a class="addthis_button_linkedin"></a>
+    
+    
+    
+    <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+<section id="comment">
+  <h1 class="title">评论</h1>
+
+  
+</section>
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="text" name="q" results="0" placeholder="搜索">
+    <i class="icon-search"></i>
+    <input type="hidden" name="q" value="site:yoursite.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/HTML5/">HTML5</a><small>1</small></li>
+  
+    <li><a href="/tags/HTTP-HTTPS/">HTTP/HTTPS</a><small>1</small></li>
+  
+    <li><a href="/tags/js/">js</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新的文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2017/02/17/drag-and-drop/">drag-and-drop</a>
+      </li>
+    
+      <li>
+        <a href="/2017/02/17/什么是HTTPS/">什么是HTTPS</a>
+      </li>
+    
+      <li>
+        <a href="/2017/02/17/debounce-and-throttle/">debounce-and-throttle</a>
+      </li>
+    
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <div id="go-pg-top"><i class="icon-arrow-up"></i></div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 yaoyj
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/page.js"></script>
+
+
+</body>
+
+</html>
