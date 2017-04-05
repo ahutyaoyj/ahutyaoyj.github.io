@@ -164,6 +164,7 @@ h4,
 h5,
 h6 {
   font-family: "Lato", Helvetica Neue, Helvetica, Arial, sans-serif;
+  color: #333;
 }
 h1 {
   font-size: 1.8em;
@@ -435,9 +436,8 @@ article .entry blockquote {
   border-bottom: 1px solid #ddd;
   font-style: italic;
   font-family: "Georgia", serif;
-  font-size: 1.2em;
+  font-size: 0.2em;
   padding: 0 30px 15px;
-  text-align: center;
 }
 article .entry blockquote footer {
   border-top: none;
