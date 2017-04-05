@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   
-  <title>drag-and-drop | yaoyj</title>
+  <title>JS的深复制和浅复制 | yaoyj</title>
   <meta name="author" content="yaoyj">
   
-  <meta name="description" content="简单介绍drag和drop事件">
+  <meta name="description" content="这里我们讨论一下JS的复杂引用类型的复制，不讨论简单数据类型的复制。  因为简单数据类型的值存在栈中，不存在引用值的情况。对象的实例是存储在堆内存中，我们通过一个引用值去操作对象，所以在复制对象的时候就存在两种情况了：复制引用和复制实例。这就是深复制和浅复制的区别。">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="drag-and-drop"/>
+  <meta property="og:title" content="JS的深复制和浅复制"/>
   <meta property="og:site_name" content="yaoyj"/>
 
   
@@ -72,21 +72,23 @@
   <div class="post-content">
     <header>
       
-        <time datetime="2017-02-17T08:37:15.000Z"><a href="/2017/02/17/drag-and-drop/">2017-02-17</a></time>
+        <time datetime="2017-02-20T08:09:10.000Z"><a href="/2017/02/20/JS的深复制和浅复制/">2017-02-20</a></time>
       
       
   
-    <h1 class="title">drag-and-drop</h1>
+    <h1 class="title">JS的深复制和浅复制</h1>
   
 
     </header>
     <div class="entry">
       
-        <p>简单介绍drag和drop事件<br><a id="more"></a></p>
-<h4 id="实现拖动："><a href="#实现拖动：" class="headerlink" title="实现拖动："></a>实现拖动：</h4><p>设置元素可拖放——设置元素属性 draggable=”true”<br>拖动开始事件：dragstart→drag<br>拖动过程中事件：dargenter→dragover→dragleave<br>拖动结束事件：drop→dragend</p>
-<h4 id="注意点："><a href="#注意点：" class="headerlink" title="注意点："></a>注意点：</h4><p>在使用dragstart事件时必须阻止事件的默认行为，否则drag事件不能触发，也就不能实现拖拽；<br>要触发drop事件，必须对dragover事件设置阻止默认事件，否则drop事件不会触发；<br>拖拽非js动态生成的元素，可使用ondrag、ondrop等事件，此时必须用event.preventDefault()阻止ondragstart事件的默认行为；<br>拖拽js动态生成的元素，必须用事件代理，否则拖拽不能实现。此时必须用event.stopPropagation()阻止dragstart事件的默认行为；<br>使用事件代理完成拖拽功能时，可在drop事件中使用return false解决Firefox中拖拽打开新标签的问题；<br>未使用事件代理，则需在drop事件同时使用event.stopPropagation()和return false解决Firefox中拖拽打开新标签的问题；<br>关于拖动事件的dataTransfer对象：</p>
-<p>在拖动事件中有一个event.dataTransfer对象（在使用事件代理时，为event.originalEvent.dataTransfer），该对象用于配置拖拽行为效果（effectAllowed），并且在拖拽过程中通过setData和getData为各事件间传递数据信息，目前我用到的就是这几个，还有其他属性大家可以在用到拖拽功能的时候试试</p>
-<h4 id="兼容性："><a href="#兼容性：" class="headerlink" title="兼容性："></a>兼容性：</h4><p>拖拽事件的兼容性很一般，文档里说的是在Internet Explorer 9、Firefox、Opera 12、Chrome 以及 Safari 5 支持拖放，目前我测的是在chrome、Firefox和IE10中可以兼容，另外有部分属性的兼容性还是有问题。虽然兼容性一般，但是在解决某些问题的时候，用HTML5的drag事件还是比较方便，比如拖拽填充表格，如果使用鼠标事件去模拟拖拽，就很难确定拖拽放下的位置，使用drag事件就很简单</p>
+        <p>这里我们讨论一下JS的复杂引用类型的复制，不讨论简单数据类型的复制。  因为简单数据类型的值存在栈中，不存在引用值的情况。<br>对象的实例是存储在堆内存中，我们通过一个引用值去操作对象，所以在复制对象的时候就存在两种情况了：复制引用和复制实例。这就是深复制和浅复制的区别。<br><a id="more"></a><br>浅复制：复制引用，复制后的引用都指向同一个实例，如果其中一个引用的值改变了，另一个引用的值也会改变<br>深复制：深复制 不是简单的复制引用，而是在堆中重新分配内存，并把源对象实例的所有属性进行新建复制，复制之后的对象与源对象完全分离</p>
+<p>对于深复制，如果源对象中有对象属性，就需要用到递归复制，保证复制对象和源对象完全分离。</p>
+<p>浅复制的实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">function(obj) &#123;</div><div class="line">   var copyObj = &#123;&#125;;</div><div class="line">   for (var key in obj) &#123;</div><div class="line">       copyObj[key] = obj[key]</div><div class="line">   &#125;</div><div class="line">   return copyObj;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var array = [1,2,3];</div><div class="line">var array_shallow = array;</div><div class="line">var array_concat = array.concat();</div><div class="line">var array_slice = array.slice(0);</div><div class="line">console.log(array === array_shallow); //true</div><div class="line">console.log(array === array_slice); //false</div><div class="line">console.log(array === array_concat); //false</div></pre></td></tr></table></figure>
+<p>他们虽返回了不同的数组实例，但是却不是真正的深复制，依然只是复制了引用，引用的对象改变了，源对象依然改变</p>
+<p>json对象的parse和stringify<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var source = &#123; name:&quot;source&quot;, child:&#123; name:&quot;child&quot; &#125; &#125;</div><div class="line">var target = JSON.parse(JSON.stringify(source)); //改变target的name属性</div><div class="line">target.name = &quot;target&quot;;</div><div class="line">console.log(source.name); //source</div><div class="line">console.log(target.name); //target</div><div class="line">//改变target的child</div><div class="line">target.child.name = &quot;target child&quot;;</div><div class="line">console.log(source.child.name); //child</div><div class="line">console.log(target.child.name); //target child</div></pre></td></tr></table></figure></p>
+<p>从代码可以看出，复制之后的对象与源对象完全分离，这个方法可以处理所有能用json格式表示的数据类型，但是对于正则表达式类型、函数类型等无法深度复制<br>，而且会直接丢失相应的值。如果对象中存在循环引用，也无法正确处理。</p>
 
       
     </div>
@@ -95,29 +97,19 @@
 
         
           <div class="alignleft post-nav">
-            <em>上一篇: </em><a href="/2017/02/20/JS的深复制和浅复制/">JS的深复制和浅复制</a>
+            <em>上一篇: </em><a href="/2017/04/05/从viewport起谈谈移动端布局/">从 viewport 起谈谈移动端布局</a>
           </div>
         
         
           <div class="alignright post-nav">
-            <em>下一篇: </em><a href="/2017/02/17/什么是HTTPS/">什么是HTTPS</a>
+            <em>下一篇: </em><a href="/2017/02/17/drag-and-drop/">drag-and-drop</a>
           </div>
           <div class="clearfix"></div>
         
 
         
         
-  
-  <div class="categories">
-    <a href="/categories/tech/">技术</a>
-  </div>
-
         
-  
-  <div class="tags">
-    <a href="/tags/HTML5/">HTML5</a>
-  </div>
-
         
   <div class="addthis addthis_toolbox addthis_default_style">
     
