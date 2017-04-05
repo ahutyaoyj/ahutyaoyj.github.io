@@ -53,13 +53,7 @@
     
       <li><a href="/categories/tech/">技术</a></li>
     
-      <li><a href="/categories/life/">生活</a></li>
-    
-      <li><a href="/categories/thoughts/">随感</a></li>
-    
       <li><a href="/archives">归档</a></li>
-    
-      <li><a href="/about">关于</a></li>
     
   </ul>
   <div class="clearfix"></div>
@@ -96,8 +90,12 @@
 </ul>
 <h3 id="viewport"><a href="#viewport" class="headerlink" title="viewport"></a>viewport</h3><p>现在我们来详细讨论一下 viewport。</p>
 <p>viewport，叫视口，就是屏幕上能够用来显示网页的那片区域，但是它又不局限于浏览器的可视区域那么大。默认情况下，移动端的 viewport 都是大于浏览器可视区域的，因为移动设备的分辨率通常比 PC 设备小，为了能在移动设备上正常显示传统的为 PC 端设计的网站，移动端的浏览器会把 viewport 设成980px（也可能是其他值）。</p>
-<h4 id="layout-viewport-和-visual-viewport"><a href="#layout-viewport-和-visual-viewport" class="headerlink" title="layout viewport 和 visual viewport"></a>layout viewport 和 visual viewport</h4><pre><code>把 layout viewport 想像成为一张不会变更大小或者形状的大图。现在想像你有一个小一些的框架，你通过它来看这张大图。这个小框架的周围被不透明的材料所环绕，这掩盖了你所有的视线，只留这张大图的一部分给你。你通过这个框架所能看到的大图的部分就是 visual viewport。当你保持远离框架（缩小）来看整个图片的时候，你可以不用管大图，或者你可以靠近一些（放大）只看局部。你也可以改变框架的方向，但是大图（layout viewport）的大小和形状永远不会变。
-</code></pre><h4 id="meta-标签控制-viewport"><a href="#meta-标签控制-viewport" class="headerlink" title="meta 标签控制 viewport"></a>meta 标签控制 viewport</h4><ul>
+<h4 id="layout-viewport-和-visual-viewport"><a href="#layout-viewport-和-visual-viewport" class="headerlink" title="layout viewport 和 visual viewport"></a>layout viewport 和 visual viewport</h4><p>视口有layout viewport和visual viewport 的区别，以下是 stackoverflow 上一个关于这两者概念的解释：</p>
+<blockquote>
+<p>把 layout viewport 想像成为一张不会变更大小或者形状的大图。现在想像你有一个小一些的框架，你通过它来看这张大图。这个小框架的周围被不透明的材料所环绕，这掩盖了你所有的视线，只留这张大图的一部分给你。你通过这个框架所能看到的大图的部分就是 visual viewport。当你保持远离框架（缩小）来看整个图片的时候，你可以不用管大图，或者你可以靠近一些（放大）只看局部。你也可以改变框架的方向，但是大图（layout viewport）的大小和形状永远不会变。</p>
+</blockquote>
+<h4 id="meta-标签"><a href="#meta-标签" class="headerlink" title="meta 标签"></a>meta 标签</h4><p>通过 name 为 viewport 的 meta 标签，可以控制 viweport：</p>
+<ul>
 <li>width：控制 viewport 的大小，可以指定的一个值(如 600)，或者是特殊的值（如 device-width， 为设备的宽度）。</li>
 <li>height：和 width 相对应，指定高度。</li>
 <li>initial-scale：初始缩放比例，也即是当页面第一次 load 的时候缩放比例。</li>
@@ -117,7 +115,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@media (max-width: 600px) &#123;</div><div class="line">    div &#123;</div><div class="line">        font-size: 2.8rem;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>手淘经过多年的摸索和实战，总结了一套移动端适配的方案——flexible方案。具体用法和原理，大家可参考：<a href="https://github.com/amfe/article/issues/17" target="_blank" rel="external">flexible.js</a></p>
+<p>阿里的手淘团队经过多年的摸索和挑战，总结了一套移动端适配的方案——flexible.js。具体用法和原理，大家可参考：<a href="https://github.com/amfe/article/issues/17" target="_blank" rel="external">flexible.js</a></p>
 <p>参考：</p>
 <ul>
 <li><a href="http://weizhifeng.net/viewports.html" target="_blank" rel="external">http://weizhifeng.net/viewports.html</a></li>

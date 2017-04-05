@@ -53,13 +53,7 @@
     
       <li><a href="/categories/tech/">技术</a></li>
     
-      <li><a href="/categories/life/">生活</a></li>
-    
-      <li><a href="/categories/thoughts/">随感</a></li>
-    
       <li><a href="/archives">归档</a></li>
-    
-      <li><a href="/about">关于</a></li>
     
   </ul>
   <div class="clearfix"></div>
@@ -88,7 +82,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var array = [1,2,3];</div><div class="line">var array_shallow = array;</div><div class="line">var array_concat = array.concat();</div><div class="line">var array_slice = array.slice(0);</div><div class="line">console.log(array === array_shallow); //true</div><div class="line">console.log(array === array_slice); //false</div><div class="line">console.log(array === array_concat); //false</div></pre></td></tr></table></figure>
 <p>他们虽返回了不同的数组实例，但是却不是真正的深复制，依然只是复制了引用，引用的对象改变了，源对象依然改变</p>
 <p>json对象的parse和stringify<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var source = &#123; name:&quot;source&quot;, child:&#123; name:&quot;child&quot; &#125; &#125;</div><div class="line">var target = JSON.parse(JSON.stringify(source)); //改变target的name属性</div><div class="line">target.name = &quot;target&quot;;</div><div class="line">console.log(source.name); //source</div><div class="line">console.log(target.name); //target</div><div class="line">//改变target的child</div><div class="line">target.child.name = &quot;target child&quot;;</div><div class="line">console.log(source.child.name); //child</div><div class="line">console.log(target.child.name); //target child</div></pre></td></tr></table></figure></p>
-<p>从代码可以看出，复制之后的对象与源对象完全分离，这个方法可以处理所有能用json格式表示的数据类型，但是对于正则表达式类型、函数类型等无法深度复制<br>，而且会直接丢失相应的值。如果对象中存在循环引用，也无法正确处理。</p>
+<p>从代码可以看出，复制之后的对象与源对象完全分离，这个方法可以处理所有能用json格式表示的数据类型，但是对于正则表达式类型、函数类型等无法深度复制<br>，而且会直接丢失相应的值。如果对象中存在循环引用，也无法正确处理。<br>…</p>
 
       
     </div>
