@@ -3,15 +3,16 @@
 <head>
   <meta charset="utf-8">
   
-  <title>JS的深复制和浅复制 | yaoyj</title>
+  <title>XSS-and-CSRF | yaoyj</title>
   <meta name="author" content="yaoyj">
   
-  <meta name="description" content="这里我们讨论一下JS的复杂引用类型的复制，不讨论简单数据类型的复制。  因为简单数据类型的值存在栈中，不存在引用值的情况。对象的实例是存储在堆内存中，我们通过一个引用值去操作对象，所以在复制对象的时候就存在两种情况了：复制引用和复制实例。这就是深复制和浅复制的区别。">
+  <meta name="description" content="今天我们来了解一下常见的 2 种网站安全攻击—— XSS 和CSRF。
+什么是XSSXSS（cross site scripting），意思是跨站点脚本，是一种攻击者在另一个用户的浏览器中执行恶意脚本的攻击方式。攻击者并不直接锁定攻击者，而是利用一个用户可能会访问的存在漏洞的网站，通过这个网站间接地进行攻击。对于浏览器而言，攻击者注入的脚本看上去就是正常网站的一部分。那到底什么样的脚本是恶意脚本？">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="JS的深复制和浅复制"/>
+  <meta property="og:title" content="XSS-and-CSRF"/>
   <meta property="og:site_name" content="yaoyj"/>
 
   
@@ -66,23 +67,40 @@
   <div class="post-content">
     <header>
       
-        <time datetime="2017-02-20T08:09:10.000Z"><a href="/2017/02/20/JS的深复制和浅复制/">2017-02-20</a></time>
+        <time datetime="2017-05-14T12:33:09.000Z"><a href="/2017/05/14/XSS-and-CSRF/">2017-05-14</a></time>
       
       
   
-    <h1 class="title">JS的深复制和浅复制</h1>
+    <h1 class="title">XSS-and-CSRF</h1>
   
 
     </header>
     <div class="entry">
       
-        <p>这里我们讨论一下JS的复杂引用类型的复制，不讨论简单数据类型的复制。  因为简单数据类型的值存在栈中，不存在引用值的情况。<br>对象的实例是存储在堆内存中，我们通过一个引用值去操作对象，所以在复制对象的时候就存在两种情况了：复制引用和复制实例。这就是深复制和浅复制的区别。<br><a id="more"></a><br>浅复制：复制引用，复制后的引用都指向同一个实例，如果其中一个引用的值改变了，另一个引用的值也会改变<br>深复制：深复制 不是简单的复制引用，而是在堆中重新分配内存，并把源对象实例的所有属性进行新建复制，复制之后的对象与源对象完全分离</p>
-<p>对于深复制，如果源对象中有对象属性，就需要用到递归复制，保证复制对象和源对象完全分离。</p>
-<p>浅复制的实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">function(obj) &#123;</div><div class="line">   var copyObj = &#123;&#125;;</div><div class="line">   for (var key in obj) &#123;</div><div class="line">       copyObj[key] = obj[key]</div><div class="line">   &#125;</div><div class="line">   return copyObj;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var array = [1,2,3];</div><div class="line">var array_shallow = array;</div><div class="line">var array_concat = array.concat();</div><div class="line">var array_slice = array.slice(0);</div><div class="line">console.log(array === array_shallow); //true</div><div class="line">console.log(array === array_slice); //false</div><div class="line">console.log(array === array_concat); //false</div></pre></td></tr></table></figure>
-<p>他们虽返回了不同的数组实例，但是却不是真正的深复制，依然只是复制了引用，引用的对象改变了，源对象依然改变</p>
-<p>json对象的parse和stringify<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var source = &#123; name:&quot;source&quot;, child:&#123; name:&quot;child&quot; &#125; &#125;</div><div class="line">var target = JSON.parse(JSON.stringify(source)); //改变target的name属性</div><div class="line">target.name = &quot;target&quot;;</div><div class="line">console.log(source.name); //source</div><div class="line">console.log(target.name); //target</div><div class="line">//改变target的child</div><div class="line">target.child.name = &quot;target child&quot;;</div><div class="line">console.log(source.child.name); //child</div><div class="line">console.log(target.child.name); //target child</div></pre></td></tr></table></figure></p>
-<p>从代码可以看出，复制之后的对象与源对象完全分离，这个方法可以处理所有能用json格式表示的数据类型，但是对于正则表达式类型、函数类型等无法深度复制<br>，而且会直接丢失相应的值。如果对象中存在循环引用，也无法正确处理。<br>…</p>
+        <p>今天我们来了解一下常见的 2 种网站安全攻击—— XSS 和CSRF。</p>
+<h3 id="什么是XSS"><a href="#什么是XSS" class="headerlink" title="什么是XSS"></a>什么是XSS</h3><p>XSS（cross site scripting），意思是跨站点脚本，是一种攻击者在另一个用户的浏览器中执行恶意脚本的攻击方式。<br>攻击者并不直接锁定攻击者，而是利用一个用户可能会访问的存在漏洞的网站，通过这个网站间接地进行攻击。对于浏览器而言，攻击者注入的脚本看上去就是正常网站的一部分。那到底什么样的脚本是恶意脚本？</p>
+<a id="more"></a>
+<p>我们知道，在浏览器中JS 的执行环境受到严格限制，而且只有有限的权限去访问用户的文件和操作系统，比如我们随便在浏览器的控制台输入一段脚本，几乎不能造成什么伤害。但是，JS 的以下特性却可以造成较大伤害：</p>
+<ul>
+<li>JS 有权访问一些用户的敏感信息，比如 cookie</li>
+<li>JS 能够通过 XHRHttpRequest 发送带有任何内容的 HTTP 请求到任何地址</li>
+<li>JS 能够通过操作 DOM 修改当前页面上的 HTML</li>
+</ul>
+<p>那么，攻击者怎么通过这些特性发起攻击呢？举个例子，很多网站都可以「记住你的用户名和密码」或者「自动登录」，其实就是在本地设置了一个 cookie，让我们免去了每次都输入用户名和密码的痛苦，但是攻击者完全可以通过<code>document.cookie</code>这么简单的代码 就获取到用户的 cookie，攻击者就可以登录我们的账号做任何他想做的事情。或者以论坛为例，如果论坛后台没有进行预防措施，攻击者在发帖的时候输入了恶意的脚本，当发帖成功，任何人访问这个帖子都会执行这个恶意脚本。</p>
+<h3 id="什么是CSRF"><a href="#什么是CSRF" class="headerlink" title="什么是CSRF"></a>什么是CSRF</h3><p>CSRF（cross site request forgery），意思是跨站请求伪造，也就是攻击者盗用我们的登陆信息，以我们的身份发送各种请求。上面说了，在网站中注入恶意脚本可以发送带有任何内容的HTPP请求到任何地址，所以我们可以说，XSS 和 CSRF 的区别就是：CSRF 是 XSS 的一种实现方式。</p>
+<h3 id="预防"><a href="#预防" class="headerlink" title="预防"></a>预防</h3><p>针对 XSS 攻击，客户端主要可以从两个方面预防：输入和输出。</p>
+<ul>
+<li>在攻击者通过表单等输入想往数据库里存入恶意脚本的时候，客户端可以用一套规则去过滤掉恶意脚本，只留下限定的输入。这种做法有一个弊端就是如果添加新功能，通常就得去更新用来过滤恶意脚本的规则；</li>
+<li>在客户端输出内容时，对之前存到数据库的内容进行过滤，将非正常的内容过滤掉，让不让其输出到页面上，这样攻击者注入的恶意脚本也就没有执行的机会</li>
+</ul>
+<p>针对 CSRF，客户端可以从以下几个方面预防：</p>
+<ul>
+<li>限定对数据库内容进行增、删、改的操作请求必须是 post 请求</li>
+<li>检验 Referrer，阻止安全域名之外的网站发起的请求</li>
+<li>生成一个随机数 token，每次请求的时候带上这个 token，客户端收到请求之后检测 token 的正确性</li>
+<li>每个请求都使用验证码，这个方法可以很完美的阻止恶意请求，但是每次都要输入验证码的使用体验不是很好</li>
+</ul>
+<p>总的来说，对于 XSS 和 CSRF 攻击我们前端能做的比较少，最安全的做法就是客户端从上述几个方面进行处理，但是我们依然很有必要了解这些 web 安全相关的知识。</p>
 
       
     </div>
@@ -90,13 +108,9 @@
       
 
         
-          <div class="alignleft post-nav">
-            <em>上一篇: </em><a href="/2017/04/05/从viewport起谈谈移动端布局/">从 viewport 起谈谈移动端布局</a>
-          </div>
-        
         
           <div class="alignright post-nav">
-            <em>下一篇: </em><a href="/2017/02/17/drag-and-drop/">drag-and-drop</a>
+            <em>下一篇: </em><a href="/2017/04/05/从viewport起谈谈移动端布局/">从 viewport 起谈谈移动端布局</a>
           </div>
           <div class="clearfix"></div>
         
